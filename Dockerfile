@@ -1,5 +1,5 @@
-# For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.8-slim
+# Use the Minimal Ubuntu-based miniforge Docker image
+FROM condaforge/miniforge3
 
 EXPOSE 5000
 
@@ -9,9 +9,14 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install pip requirements
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+# Install Python packages using conda (miniforge)
+COPY environment.yml ./
+RUN conda env create -f environment.yml
+RUN conda clean --all --yes
+
+# Update environment variables to use created conda environment
+ENV CONDA_DEFAULT_ENV flask-env
+ENV PATH /opt/conda/envs/flask-env/bin:$PATH
 
 WORKDIR /app
 COPY . /app

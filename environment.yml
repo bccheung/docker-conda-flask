@@ -1,0 +1,8 @@
+name: flask-env
+channels:
+  - wsp_sap
+  - conda-forge
+dependencies:
+  - python=3.9
+  - flask
+  - gunicorn
